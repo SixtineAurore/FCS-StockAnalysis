@@ -4,6 +4,41 @@
 2.1 Profile
 
 2.2 Stock Analysis
+#Formatting
+"""Will include headers, subtitles, ..."""
+Import necessary modules (e.g. Matplotlib,...)
+
+#Stock data retrieval and analysis
+User is asked to input a stock symbol
+If it is formatted right:
+  Import stock data from Yahoo finance
+  Show data on a graph
+  Calculate P/E ratios
+If it is not formatted right:
+  Output a message specifying that the stock data could not be retrieved due because the input was wrongly formatted.
+
+#DCF
+If DCF data is available:
+  Calculate metrics of a basic DCF
+  Show results on a table or graph
+  Allow user to change the assumptions made (within logical bounds?)
+
+If DCF data is not available:
+  Print a message saying "DCF data not available".
+
+#Adding the stock to the profile
+Add a button letting the user add the stock name to a list linked to their profile (with a description?).
+"""Stock name should then appear in their profile and be used in the machine learning to connect them to other users."""
+
+#New stock data retrieval and analysis
+Either keep the initial stock search bar and let the user enter as many stock names as they want. 
+Or have a "New Search" button which, when pressed, will reset the page.
+
+#Potential add ons
+- to allow users to retrieve data for more than one stock
+- to allow users to compare stock data between two stocks
+- to track the amount of views of a stock and rank them
+  - could then be used in a "most popular stocks" column in the community tab
 
 2.3 Community
 
