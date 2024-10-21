@@ -2,6 +2,101 @@
 
 2. Platform
 2.1 Profile
+# Back-End Pseudocode for Smart Stocks Account Management
+
+# Function to connect to the database for Smart Stocks
+function connect_to_database(database_name):
+    # Establish a connection to the specified database
+    return connection
+
+# Function to hash a password for security
+function hash_password(password):
+    # Use a secure hashing algorithm to hash the password
+    return hashed_password
+
+# Function to verify the password against the stored hashed password
+function verify_password(entered_password, stored_hashed_password):
+    # Compare the entered password (hashed) with the stored hash
+    return match_found
+
+# Function to check if a username already exists in the database
+function username_exists(username):
+    # Query the database to check for the existing username
+    return exists
+
+# Function to store a new user in the database
+function store_user_in_database(username, hashed_password, phone_number):
+    # Execute an insert command to add the new user to the database
+
+# Function to log in an existing user
+function login_user(username, password):
+    # Connect to the database
+    connection = connect_to_database("Smart Stocks DB")
+    
+    # Retrieve the stored hashed password for the given username
+    stored_hashed_password = get_stored_password(username)
+
+    # Verify the entered password against the stored hashed password
+    if verify_password(password, stored_hashed_password):
+        # Retrieve user preferences for stock analysis
+        user_preferences = get_user_preferences(username)
+        return "Login successful!", user_preferences
+    else:
+        return "Invalid username or password."
+
+# Function to retrieve user preferences for stock analysis
+function get_user_preferences(username):
+    # Query the database to get stock preferences or analysis data
+    return user_preferences_data
+
+# Function to perform stock analysis based on user preferences
+function analyze_stocks(user_preferences):
+    # Code to fetch stock data based on preferences and perform analysis
+    return analysis_results
+
+# Function to retrieve user comments from the community
+function get_user_comments(username):
+    # Query the database to retrieve user comments or interactions
+    return user_comments
+
+# Function to add a comment to the community
+function add_comment(username, comment_text):
+    # Store the comment in the database associated with the username
+
+# Function to retrieve all comments related to a specific stock
+function get_comments_for_stock(stock_symbol):
+    # Query the database to get all comments related to the given stock
+    return comments
+
+# Function to register a new user
+function register_user(username, password, phone_number):
+    # Connect to the database
+    connection = connect_to_database("Smart Stocks DB")
+    
+    # Check if the username already exists
+    if username_exists(username):
+        return "Username already exists. Please choose a different username."
+    
+    # Hash the password for security
+    hashed_password = hash_password(password)
+    
+    # Store the new user in the database
+    store_user_in_database(username, hashed_password, phone_number)
+    return "Registration successful!"
+
+# Function to handle user logout
+function logout_user(username):
+    # Clear user session data or token
+    return "Logout successful."
+
+# Optional: Function to update user profile information
+function update_user_profile(username, new_phone_number, new_preferences):
+    # Update the user's profile information in the database
+
+# Optional: Function to delete user account
+function delete_user_account(username):
+    # Remove the user's data from the database
+    return "Account deleted successfully."
 
 2.2 Stock Analysis
 #Formatting
