@@ -4,8 +4,6 @@ import yfinance as yf
 import matplotlib.pyplot as plt
 
 1. Form
-class Profile():
-    
 
 2. Platform
 2.1 Profile
