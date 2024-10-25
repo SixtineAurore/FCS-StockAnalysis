@@ -1,0 +1,9 @@
+## sqlite3 ##
+sqlite3 is a lightweight, self-contained SQL database engine that is built into many programming languages, including Python. It is an embedded database that does not require a separate server process, making it ideal for small to medium-sized applications, prototyping, and situations where simplicity and portability are important.
+
+Key Features of SQLite:
+Serverless: Unlike many database systems like MySQL or PostgreSQL, SQLite doesn’t need a server to run. It operates within the application using it.
+Self-contained: The entire database is stored in a single file, making it easy to deploy and share.
+Zero Configuration: No setup or installation is required to use it, making it extremely easy to use for quick projects or local storage needs.
+Lightweight: SQLite is designed to be a simple, fast, and reliable database system with low overhead.
+SQL Compliant: It supports most of the SQL standards (though it may not have advanced features of larger systems like stored procedures).
