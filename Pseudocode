@@ -220,3 +220,9 @@ Or have a "New Search" button which, when pressed, will reset the page.
 
 2.3 Community
 
+2.4 Machine Learning 
+Get Request for the last 5 days, i.e. get_data(ticker, start_date = xyz, end_date = xyz, index_as_date = True, interval = “1d”)
+Calculate if the day closed + or - using open and close price from this request
+The we have a pattern, i.e. +-++-, check with the table what the prediction for the next day is and print the % range for the following day
+
+
