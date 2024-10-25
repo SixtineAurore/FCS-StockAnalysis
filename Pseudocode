@@ -2,10 +2,10 @@ import streamlit as st
 import numpy as np
 import yfinance as yf
 import matplotlib.pyplot as plt
-
-1. Form
 import sqlite3
 import getpass
+
+1. Form
 
 # start connection with Databank 
 conn = sqlite3.connect('users.db')
