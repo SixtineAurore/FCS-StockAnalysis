@@ -16,6 +16,9 @@ cursor.execute('''
 CREATE TABLE IF NOT EXISTS users (
     username TEXT PRIMARY KEY,
     password TEXT NOT NULL,
+    risk_preference TEXT,
+    favorite_industries TEXT,
+    reasons_membership TEXT,
     favorite_stock TEXT
 )
 ''')
@@ -29,9 +32,20 @@ def register():
         return
     
     password = getpass.getpass("Please enter a password. ")
-    favorite_stock = input("Please enter your favorite stock symbol.")
     
-    cursor.execute("INSERT INTO users (username, password, favorite_stock) VALUES (?, ?, ?)",
+    #Investment Profile
+    risk_types = ["low", "medium", "high"]
+    risk_preference = st.selectbox("Please enter whether you have a low, medium or high appetite for risk.", risk_types)
+    
+    industries = ["Technology", "Healthcare", "Financials, "Energy", "Consumer Goods", "Utilities"]
+    favorite_industries = st.selectbox("Please select your favorite industries.", industries)
+    
+    favorite_stock = input("Please enter your favorite stock symbol.")
+
+    reasons = ["To have access to a free stock analysis tool", "To network with fellow investors", "Out of curiosity"]
+    reasons_membership = st.selectbox("Please explain why you decided to join Smart Stocks.", reasons)
+
+    cursor.execute("INSERT INTO users (username, password, risk_preferences, favourite_industries, reasons_membership, favorite_stock) VALUES (?, ?, ?)",
                    (username, password, favorite_stock))
     conn.commit()
     print("Registration successful!")
@@ -56,7 +70,10 @@ def view_profile(username):
     cursor.execute("SELECT * FROM users WHERE username=?", (username,))
     user = cursor.fetchone()
     print(f"\nProfil for {username}:")
-    print(f"favorite stock: {user[2]}")
+    print(f"\nFavorite industry: {user[2]}")
+    print(f"\nRisk preference: {user[4]}")
+    print(f"\nReasons membership {user[5]}")
+    print(f"\nFavorite stock: {user[3]}")
 
 def main():
     while True:
