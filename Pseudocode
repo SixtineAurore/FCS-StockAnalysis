@@ -315,4 +315,99 @@ Get Request for the last 5 days, i.e. get_data(ticker, start_date = xyz, end_dat
 Calculate if the day closed + or - using open and close price from this request
 The we have a pattern, i.e. +-++-, check with the table what the prediction for the next day is and print the % range for the following day
 
+import streamlit as st
+import sqlite3
+import yfinance as yf
+import matplotlib.pyplot as plt
+
+# Database setup
+conn = sqlite3.connect('users.db')
+cursor = conn.cursor()
+
+# Create table if it doesn't exist
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS users (
+    username TEXT PRIMARY KEY,
+    password TEXT NOT NULL,
+    risk_preference TEXT,
+    favorite_industries TEXT,
+    reasons_membership TEXT,
+    favorite_stock TEXT
+)
+''')
+conn.commit()
+
+def register():
+    username = st.text_input("Please enter a username:")
+    if username:
+        cursor.execute("SELECT * FROM users WHERE username=?", (username,))
+        if cursor.fetchone():
+            st.write("Username already exists. Please choose another.")
+            return
+        
+        password = st.text_input("Please enter a password:", type="password")
+        risk_types = ["Low", "Medium", "High"]
+        risk_preference = st.selectbox("Risk appetite:", risk_types)
+        
+        industries = ["Technology", "Healthcare", "Financials", "Energy", "Consumer Goods", "Utilities"]
+        favorite_industries = st.selectbox("Favorite industry:", industries)
+        
+        favorite_stock = st.text_input("Favorite stock symbol:")
+        reasons = ["Access to stock analysis", "Network with investors", "Curiosity"]
+        reasons_membership = st.selectbox("Reason for joining:", reasons)
+
+        if st.button("Register"):
+            cursor.execute(
+                "INSERT INTO users (username, password, risk_preference, favorite_industries, reasons_membership, favorite_stock) VALUES (?, ?, ?, ?, ?, ?)",
+                (username, password, risk_preference, favorite_industries, reasons_membership, favorite_stock)
+            )
+            conn.commit()
+            st.write("Registration successful!")
+
+def login():
+    username = st.text_input("Username:")
+    if username:
+        cursor.execute("SELECT * FROM users WHERE username=?", (username,))
+        user = cursor.fetchone()
+        if not user:
+            st.write("Username not found.")
+            return None
+        
+        password = st.text_input("Password:", type="password")
+        if user[1] != password:
+            st.write("Incorrect password.")
+            return None
+        
+        st.write("Login successful!")
+        return username
+
+def view_profile(username):
+    cursor.execute("SELECT * FROM users WHERE username=?", (username,))
+    user = cursor.fetchone()
+    if user:
+        st.write(f"**Profile for {username}:**")
+        st.write(f"- Favorite Industry: {user[3]}")
+        st.write(f"- Risk Preference: {user[2]}")
+        st.write(f"- Membership Reason: {user[4]}")
+        st.write(f"- Favorite Stock: {user[5]}")
+
+def main():
+    st.title("User Registration and Login System")
+    menu = ["Register", "Login", "Exit"]
+    choice = st.sidebar.selectbox("Menu", menu)
+
+    if choice == "Register":
+        register()
+    elif choice == "Login":
+        username = login()
+        if username:
+            view_profile(username)
+    else:
+        st.write("Goodbye!")
+
+if __name__ == "__main__":
+    main()
+
+# Close database connection
+conn.close()
 
