@@ -5,8 +5,6 @@ import matplotlib.pyplot as plt
 import sqlite3
 import getpass
 
-1. Form
-
 # start connection with Databank 
 conn = sqlite3.connect('users.db')
 cursor = conn.cursor()
@@ -23,6 +21,81 @@ CREATE TABLE IF NOT EXISTS users (
 )
 ''')
 conn.commit()
+
+def register():
+    username = st.text_input("Please enter a username: ")
+    cursor.execute("SELECT * FROM users WHERE username=?", (username,))
+    if cursor.fetchone():
+        st.write("Username already exists. Please choose another.")
+        return
+    
+    password = getpass.getpass("Please enter a password. ")
+    
+    #Investment Profile
+    risk_types = ["low", "medium", "high"]
+    risk_preference = st.selectbox("Please enter whether you have a low, medium or high appetite for risk.", risk_types)
+    
+    industries = ["Technology", "Healthcare", "Financials", "Energy", "Consumer Goods", "Utilities"]
+    favorite_industries = st.selectbox("Please select your favorite industries.", industries)
+    
+    favorite_stock = st.text_input("Please enter your favorite stock symbol.")
+
+    reasons = ["To have access to a free stock analysis tool", "To network with fellow investors", "Out of curiosity"]
+    reasons_membership = st.selectbox("Please explain why you decided to join Smart Stocks.", reasons)
+
+    cursor.execute("INSERT INTO users (username, password, risk_preferences, favourite_industries, reasons_membership, favorite_stock) VALUES (?, ?, ?, ?, ?, ?)",(username, password, risk_preference, favorite_industries, reasons_membership, favorite_stock))
+    conn.commit()
+    st.write("Registration successful!")
+
+def login():
+    username = st.text_input("Please enter your username: ")
+    cursor.execute("SELECT * FROM users WHERE username=?", (username,))
+    user = cursor.fetchone()
+    if not user:
+        st.write("Username not found.")
+        return None
+    
+    password = getpass.getpass("Please enter your password: ")
+    if user[1] != password:
+        st.write("Incorrect password.")
+        return None
+    
+    st.write("Login successful!")
+    return username
+
+def view_profile(username):
+    cursor.execute("SELECT * FROM users WHERE username=?", (username,))
+    user = cursor.fetchone()
+    st.write(f"\nProfil for {username}:")
+    st.write(f"\nFavorite industry: {user[2]}")
+    st.write(f"\nRisk preference: {user[4]}")
+    st.write(f"\nReasons membership {user[5]}")
+    st.write(f"\nFavorite stock: {user[3]}")
+
+def main():
+    while True:
+        st.write("\n1. Registration")
+        st.write("2. Log in")
+        st.write("3. Exit")
+        choice = st.text_input("Enter your choice (1-3): ")
+        
+        if choice == '1':
+            register()
+        elif choice == '2':
+            username = login()
+            if username:
+                view_profile(username)
+        elif choice == '3':
+            st.write("Goodbye!")
+            break
+        else:
+            st.write("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
+
+# Close database connection
+conn.close()
 
 def register():
     username = input("Please enter a username: ")
