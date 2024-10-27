@@ -12,3 +12,8 @@ SQL Compliant: It supports most of the SQL standards (though it may not have adv
 df.iloc[-1]: Retrieves the entire last row of the DataFrame df.
 df.iloc[-1][column_name]: Retrieves the value of column_name in the last row.
 .iloc[-1] is especially helpful for time series data where you might want the most recent entry.
+
+When you have .loc[:, 'Total Cashflow from Operating activities'].iloc[0], it means you're performing two operations on a pandas DataFrame in sequence:
+.loc[:, 'Total Cashflow from Operating activities']: This selects all rows (:) from the column named 'Total Cashflow from Operating activities'.
+.iloc[0]: This then retrieves the first entry (row) from the result of the previous selection.
+The overall effect is to get the first value from the specified column.
