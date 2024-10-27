@@ -59,12 +59,16 @@ def login():
             return None
         
         password = st.text_input("Password:", type="password")
-        if user[1] != password:
-            st.write("Incorrect password.")
-            return None
-        
-        st.write("Login successful!")
-        return username
+        if user[1]:
+            if user[1] == password:
+                st.write("Correct password")
+                st.write("Login successful!")
+                return username
+            elif user[1] != password:
+                st.write("Incorrect password")
+                return None
+        else:
+            return None  
 
 def view_profile(username):
     cursor.execute("SELECT * FROM users WHERE username=?", (username,))
