@@ -7,3 +7,8 @@ Self-contained: The entire database is stored in a single file, making it easy t
 Zero Configuration: No setup or installation is required to use it, making it extremely easy to use for quick projects or local storage needs.
 Lightweight: SQLite is designed to be a simple, fast, and reliable database system with low overhead.
 SQL Compliant: It supports most of the SQL standards (though it may not have advanced features of larger systems like stored procedures).
+# .iloc[-1] is a method used with pandas DataFrames or Series to access the last row or element based on its integer index position. Here’s how it works:
+
+df.iloc[-1]: Retrieves the entire last row of the DataFrame df.
+df.iloc[-1][column_name]: Retrieves the value of column_name in the last row.
+.iloc[-1] is especially helpful for time series data where you might want the most recent entry.
