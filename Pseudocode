@@ -132,6 +132,61 @@ if __name__ == "__main2__":
 conn.close()
 
 2. Platform
+# Profile Navigation
+def home():
+    st.write("Welcome to the Home Page!")
+    # Add any additional content or user guide information here
+
+def profile(username):
+    view_profile(username)
+    st.write("This is your profile page.")
+    # Add functionality for editing profile info or tracking stocks
+
+def stock_analysis():
+    st.write("Stock Analysis Tool")
+    # Add code to retrieve and analyze stocks (e.g., using yfinance)
+
+def community():
+    st.write("Community Forum")
+    # Add code for users to post or exchange opinions
+
+def main_after_login(username):
+    # Main navigation after user login
+    st.title("Smart Stocks - User Portal")
+    menu2 = ["Home", "Profile", "Stock Analysis", "Community"]
+    choice = st.sidebar.selectbox("Menu", menu2)
+
+    if choice == "Home":
+        home()
+    elif choice == "Profile":
+        profile(username)
+    elif choice == "Stock Analysis":
+        stock_analysis()
+    elif choice == "Community":
+        community()
+    else:
+        st.write("Goodbye!")
+
+# Call main_after_login after successful login
+def main():
+    st.title("User Registration and Login System")
+    menu = ["Who we are", "Register", "Login", "Exit"]
+    choice = st.sidebar.selectbox("Menu", menu)
+
+    if choice == "Register":
+        register()
+    elif choice == "Login":
+        username = login()
+        if username:
+            main_after_login(username)  # Switch to new sidebar upon login
+    elif choice == "Who we are":
+        intro()
+    else:
+        st.write("Goodbye!")
+
+if __name__ == "__main__":
+    main()
+
 2.1 Profile
 # Back-End Pseudocode for Smart Stocks Account Management
 
