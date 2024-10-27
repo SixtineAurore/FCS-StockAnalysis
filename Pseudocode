@@ -78,9 +78,12 @@ def view_profile(username):
         st.write(f"- Membership Reason: {user[4]}")
         st.write(f"- Favorite Stock: {user[5]}")
 
+def intro():
+    #Smart stock description with title, logo, slogan, target
+
 def main():
     st.title("User Registration and Login System")
-    menu = ["Register", "Login", "Exit"]
+    menu = ["Who we are", "Register", "Login", "Exit"]
     choice = st.sidebar.selectbox("Menu", menu)
 
     if choice == "Register":
@@ -89,14 +92,41 @@ def main():
         username = login()
         if username:
             view_profile(username)
+    elif choice == "Who we are":
+        intro()
     else:
         st.write("Goodbye!")
 
 if __name__ == "__main__":
     main()
 
-# Close database connection
-conn.close()
+# Profile Navigation
+def home():
+    #user guide and intro page to users
+
+def profile():
+    view_profile(username) 
+    #function to allow changes to profile info
+    #function that shows them the stocks they've looked up
+
+def main2():
+    st.title("Profile")
+    menu2 = ["Home", "Profile", "Stock Analysis", "Community"]
+    choice = st.sidebar.selectbox("Menu", menu2)
+
+    if choice == "Profile":
+        profile()
+    elif choice == "Stock Analysis":
+        stock_analysis = analysis()
+    elif choice == "Community":
+        community = network()
+    elif choice == "Home":
+        home()
+    else:
+        st.write("Goodbye!")
+
+if __name__ == "__main2__":
+    main2()
 
 # Close database connection
 conn.close()
