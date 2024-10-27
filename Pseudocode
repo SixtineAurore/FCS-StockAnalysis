@@ -23,14 +23,14 @@ CREATE TABLE IF NOT EXISTS users (
 conn.commit()
 
 def register():
-    username = st.text_input("Please enter a username:")
+    username = st.text_input("Please enter a username*:")
     if username:
         cursor.execute("SELECT * FROM users WHERE username=?", (username,))
         if cursor.fetchone():
             st.write("Username already exists. Please choose another.")
             return
         
-        password = st.text_input("Please enter a password:", type="password")
+        password = st.text_input("Please enter a password*:", type="password")
         risk_types = ["Low", "Medium", "High"]
         risk_preference = st.selectbox("Risk appetite:", risk_types)
         
@@ -59,16 +59,14 @@ def login():
             return None
         
         password = st.text_input("Password:", type="password")
-        if user[1]:
+        if password:
             if user[1] == password:
                 st.write("Correct password")
                 st.write("Login successful!")
                 return username
-            elif user[1] != password:
+            else:
                 st.write("Incorrect password")
                 return None
-        else:
-            return None  
 
 def view_profile(username):
     cursor.execute("SELECT * FROM users WHERE username=?", (username,))
