@@ -5,6 +5,41 @@ import matplotlib.pyplot as plt
 import sqlite3
 import hashlib
 
+#titel
+st.set_page_config(
+    page_title="Smart Stocks",   
+)
+
+#styling mit CSS (Armin)
+st.write(''' <style> /* eingebettetes CSS, daher <> und </> zum öffnen und schliessen von commands wie in html/css */
+         /* company logo color ist 43,103,176 in RGB und #2b67b0 in hex */
+         
+    
+        input[type="password"], input[type="text"] {
+        background-color: #b3d8ff;
+        padding: 0px;
+        font-size: 2em;
+        border: 4px solid #2b67b0;
+        border-radius: 8px;
+        margin-bottom: 0px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+        body, h1, h2, h3, h4, h5, h6, p, div, label, span {
+        font-family: 'Verdana', sans-serif;
+        color: #2b67b0;
+        
+    }
+
+    /* Hintergrundfarbe */
+    [data-testid="stAppViewContainer"] {
+        background-color: #89CFF0; 
+        
+    }
+    
+         </style>''', unsafe_allow_html=True)  #muss man machen um automatisches "Übergehen" von html bzw css code zu umgehen
+
 # Database setup
 conn = sqlite3.connect('users.db')
 cursor = conn.cursor()
