@@ -24,3 +24,13 @@ What cursor.execute() Does:
 Executes SQL Queries: Sends SQL commands to the database.
 Fetches Results: For SELECT queries, retrieves data you can access with methods like fetchall() or fetchone().
 Modifies Data: For commands like INSERT, UPDATE, or DELETE, it stages changes to be saved with conn.commit().
+
+what is:  SELECT sender, message, timestamp 
+        FROM messages 
+        WHERE (sender = ? AND receiver = ?) OR (sender = ? AND receiver = ?)
+        ORDER BY timestamp ASC
+This SQL query retrieves messages between two users from a table called messages. Here’s a breakdown of each part of the query:
+
+SELECT sender, message, timestamp: Specifies that the query should return the columns sender, message, and timestamp from each matching row.
+FROM messages: Specifies the table from which to retrieve data, in this case, messages.
+WHERE (sender = ? AND receiver = ?) OR (sender = ? AND receiver = ?)
