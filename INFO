@@ -34,3 +34,6 @@ This SQL query retrieves messages between two users from a table called messages
 SELECT sender, message, timestamp: Specifies that the query should return the columns sender, message, and timestamp from each matching row.
 FROM messages: Specifies the table from which to retrieve data, in this case, messages.
 WHERE (sender = ? AND receiver = ?) OR (sender = ? AND receiver = ?)
+
+.strip()
+In Python, .strip() is a string method that removes any leading and trailing whitespace (spaces, tabs, newlines) from a string. It can also remove specific characters from both ends of the string if specified.
