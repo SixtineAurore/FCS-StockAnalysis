@@ -144,10 +144,9 @@ def intro():
 # Stock analysis function with DCF calculation and plotting
 def stock_analysis():
     st.write("Stock Analysis Tool")
-
     stock_symbol = st.text_input("Enter stock symbol:")
+    yahoo_stock = yf.Ticker(stock_symbol)
     if stock_symbol:
-        yahoo_stock = yf.Ticker(stock_symbol)
         stock_data = yahoo_stock.history(period="1y")
 
         current_price_yahoo = stock_data['Close'].iloc[-1] #retrieves the most recent stock price; more in INFO doc
@@ -163,49 +162,6 @@ def stock_analysis():
             st.write("P/E ratio is not available.")
 
         st.line_chart(stock_data['Close'])
-
-    # Retrieve cashflow data from Yahoo Finance
-    cashflow_data = yahoo_stock.cashflow
-    st.write(cashflow_data)
-    
-    # Check if the 'Total Cash From Operating Activities' column exists
-    if cashflow_data is not None and 'Total Cash From Operating Activities' in cashflow_data.columns:
-        free_cash_flow_yahoo = cashflow_data.loc[:, 'Total Cash From Operating Activities'].iloc[0] #iloc indicates the exact location of the data we're looking for; more in INFO doc
-        st.write(f"Free Cash Flow (Yahoo Finance): {free_cash_flow_yahoo}")
-
-        if free_cash_flow_yahoo:  # Ensure free cash flow is available for DCF calculation
-            discount_rate = 0.10
-            growth_rate = 0.03 #IMPORTANT let's see if we want to change this or let people input it themselves
-            years = 5
-    
-            # Calculate discounted cash flows over the given years
-            for year in range(1, years +1):
-                cash_flows = [free_cash_flow_yahoo * (1 + growth_rate) ** year / (1 + discount_rate) ** year]
-            
-            # Calculate terminal value using the last cash flow
-            terminal_value = cash_flows[-1] * (1 + growth_rate) / (discount_rate - growth_rate)
-            
-            # Calculate total DCF value
-            total_dcf_value = sum(cash_flows) + terminal_value
-    
-            st.write(f"The estimated DCF value of {stock_symbol}: ${total_dcf_value:.2f}")
-
-            # Plot discounted cash flows
-            plt.figure(figsize=(10, 5))
-            plt.plot(range(1, years + 1), cash_flows, label='Discounted Cash Flows', marker='o')
-            plt.title(f'Discounted Cash Flows for {stock_symbol}')
-            plt.xlabel('Year')
-            plt.ylabel('DCF (in $)')
-            plt.grid(True)
-            plt.legend()
-    
-            # Display the chart in Streamlit
-            st.pyplot(plt.gcf()) 
-
-        else:
-            st.write("Free cash flow data is not available for DCF calculation.")
-    else:
-        st.write("Could not find 'Total Cash From Operating Activities' in the cashflow data.")
 
 # New Community Functions
 def find_similar_users(username):
@@ -231,7 +187,7 @@ def save_message(sender, receiver, message):
         INSERT INTO messages (sender, receiver, message, timestamp)
         VALUES (?, ?, ?, datetime('now'))
     """, (sender, receiver, message))
-    conn.commit()
+    conn.commit() #saves changes to database permanently
 
 def get_chat_history(user1, user2):
     """Retrieve chat history between two users"""
@@ -246,7 +202,7 @@ def get_chat_history(user1, user2):
 def community_page(username):
     st.header("Community")
     
-    # Display similar users
+    # Display similar users 
     st.subheader("Users with Similar Interests")
     similar_users = find_similar_users(username)
     
@@ -281,7 +237,7 @@ def community_page(username):
         if st.button("Send"):
             if new_message.strip():
                 save_message(username, st.session_state.chat_with, new_message)
-                st.experimental_rerun()
+                st.experimental_rerun() #could be removed
 
 # Main function for logged-in user
 def main_after_login(username):
