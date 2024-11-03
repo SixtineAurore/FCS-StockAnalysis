@@ -17,3 +17,10 @@ When you have .loc[:, 'Total Cashflow from Operating activities'].iloc[0], it me
 .loc[:, 'Total Cashflow from Operating activities']: This selects all rows (:) from the column named 'Total Cashflow from Operating activities'.
 .iloc[0]: This then retrieves the first entry (row) from the result of the previous selection.
 The overall effect is to get the first value from the specified column.
+
+cursor.execute()
+In Python's database libraries, like sqlite3 or psycopg2, cursor.execute() is used to run SQL commands in a database session. It allows you to execute various SQL statements (SELECT, INSERT, UPDATE, DELETE, etc.) to interact with and modify data in tables.
+What cursor.execute() Does:
+Executes SQL Queries: Sends SQL commands to the database.
+Fetches Results: For SELECT queries, retrieves data you can access with methods like fetchall() or fetchone().
+Modifies Data: For commands like INSERT, UPDATE, or DELETE, it stages changes to be saved with conn.commit().
