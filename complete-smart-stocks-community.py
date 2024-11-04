@@ -52,9 +52,17 @@ CREATE TABLE IF NOT EXISTS users (
     risk_preference TEXT,
     favorite_industries TEXT,
     reasons_membership TEXT,
-    favorite_stock TEXT
+    favorite_stock TEXT,
+    linkedin_profile TEXT
 )
 ''')
+# Check if the linkedin_profile column exists, and add it if it doesn't
+cursor.execute("PRAGMA table_info(users)")
+columns = [col[1] for col in cursor.fetchall()]
+
+if 'linkedin_profile' not in columns:
+    cursor.execute("ALTER TABLE users ADD COLUMN linkedin_profile TEXT")
+    conn.commit()
 
 # Create messages table for chat functionality
 cursor.execute('''
@@ -94,12 +102,13 @@ def register():
         favorite_stock = st.text_input("Favorite stock symbol:")
         reasons = ["Access to stock analysis", "Network with investors", "Curiosity"]
         reasons_membership = st.selectbox("Reason for joining:", reasons)
+        linkedin_profile =st.text_input("Linkedin Profile Link (optional):") #new field for Linkedin Link
 
         if st.button("Register"):
             hashed_password = hash_password(password)
             cursor.execute(
-                "INSERT INTO users (username, password, risk_preference, favorite_industries, reasons_membership, favorite_stock) VALUES (?, ?, ?, ?, ?, ?)",
-                (username, hashed_password, risk_preference, favorite_industries, reasons_membership, favorite_stock)
+                "INSERT INTO users (username, password, risk_preference, favorite_industries, reasons_membership, favorite_stock, linkedin_profile) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (username, hashed_password, risk_preference, favorite_industries, reasons_membership, favorite_stock, linkedin_profile)
             )
             conn.commit()
             st.write("Registration successful!")
@@ -136,7 +145,8 @@ def view_profile(username):
         st.write(f"- Risk Preference: {user[2]}")
         st.write(f"- Membership Reason: {user[4]}")
         st.write(f"- Favorite Stock: {user[5]}")
-
+        if user [6]: #If Linkedin link exists, display it
+            st.write(f"-LinkedIn Profile: [Link]({user[6]})")
 # Introduction function placeholder
 def intro():
     st.write("Welcome to Smart Stocks!")
@@ -171,7 +181,7 @@ def find_similar_users(username):
     
     if current_user:
         cursor.execute("""
-            SELECT username, risk_preference, favorite_industries, favorite_stock 
+            SELECT username, risk_preference, favorite_industries, favorite_stock, linkedin_profile 
             FROM users 
             WHERE username != ? 
             AND (risk_preference = ? OR favorite_industries = ? OR favorite_stock = ?)
@@ -212,7 +222,10 @@ def community_page(username):
                 st.write(f"Risk Preference: {user[1]}")
                 st.write(f"Favorite Industry: {user[2]}")
                 st.write(f"Favorite Stock: {user[3]}")
-                
+                #display linkedin link if available
+                if user[4]:  # Assuming the LinkedIn link is the 5th column in the query
+                    st.write(f"LinkedIn Profile: [Link]({user[4]})")
+
                 # Chat interface
                 if st.button(f"Chat with {user[0]}", key=f"chat_{user[0]}"):
                     st.session_state.chat_with = user[0]
