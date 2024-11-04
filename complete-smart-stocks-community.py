@@ -151,27 +151,39 @@ def view_profile(username):
 def intro():
     st.write("Welcome to Smart Stocks!")
 
-# Stock analysis function with DCF calculation and plotting
-def stock_analysis():
-    st.write("Stock Analysis Tool")
-    stock_symbol = st.text_input("Enter stock symbol:")
-    yahoo_stock = yf.Ticker(stock_symbol)
-    if stock_symbol:
+# Function for the Yahoo Finance analysis
+def yahoof(stock_symbol):
+    try: 
+        yahoo_stock = yf.Ticker(stock_symbol)
         stock_data = yahoo_stock.history(period="1y")
-
         current_price_yahoo = stock_data['Close'].iloc[-1] #retrieves the most recent stock price; more in INFO doc
         eps_yahoo = yahoo_stock.info.get('trailingEps') #retrieves the latest EPS data
 
         st.write(f"Current stock price of {stock_symbol}: ${current_price_yahoo:.2f}")
         st.write(f"Earnings per share (EPS) of {stock_symbol}: {eps_yahoo}")
-
+    
         if eps_yahoo:
             pe_ratio = current_price_yahoo / eps_yahoo
             st.write(f"The P/E ratio of {stock_symbol}: {pe_ratio:.2f}")
         else:
             st.write("P/E ratio is not available.")
-
         st.line_chart(stock_data['Close'])
+    except:
+        st.write("Apologies, we could not the information you're requesting on Yahoo finance.")
+
+# Function for the Stock Analysis
+def check(stock_symbol):
+    if yf.Ticker(stock_symbol):
+        yahoof(stock_symbol)
+    else:
+        st.write("Apologies, we could not the information you're requesting on Yahoo finance.")
+
+# Stock analysis function
+def stock_analysis():
+    st.write("Stock Analysis Tool")
+    stock_symbol = st.text_input("Enter stock symbol:")
+    if stock_symbol:
+        check(stock_symbol)
 
 # New Community Functions
 def find_similar_users(username):
