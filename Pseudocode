@@ -129,6 +129,8 @@ def intro():
 
 #meiki/armin logo insertion, path needs to be in the same directory as the main code
     st.image("LogoCS.png", width=700)
+#Insert Company Powerpoint as Image-Slideshow
+#Insert HSG Slogan 
 
 # Stock analysis function with DCF calculation and plotting
 def stock_analysis():
