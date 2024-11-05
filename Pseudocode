@@ -127,6 +127,9 @@ def view_profile(username):
 def intro():
     st.write("Welcome to Smart Stocks!")
 
+#meiki/armin logo insertion, path needs to be in the same directory as the main code
+    st.image("LogoCS.png", width=700)
+
 # Stock analysis function with DCF calculation and plotting
 def stock_analysis():
     st.write("Stock Analysis Tool")
