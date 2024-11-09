@@ -1,9 +1,11 @@
 import streamlit as st
 import numpy as np
+import pandas as pd
 import yfinance as yf
 import matplotlib.pyplot as plt
 import sqlite3
 import hashlib
+from sklearn.linear_model import LinearRegression
 
 #titel
 st.set_page_config(
@@ -171,10 +173,30 @@ def yahoof(stock_symbol):
     except:
         st.write("Apologies, we could not the information you're requesting on Yahoo finance.")
 
+#Machine Learning
+def predictions(stock_symbol):
+    yahoo_stock = yf.Ticker(stock_symbol)
+    period_options = ["1d", "5d", "1mo", "3mo", "6mo", "1y"]
+    data = yahoo_stock.history(period=str(st.selectbox("How many days:", period_options)))
+    X = data.index.map(pd.Timestamp.toordinal).values.reshape(-1, 1)
+    X = X.reshape(-1, 1)
+    linear_regressor = LinearRegression()
+    linear_regressor.fit(X, Y)
+    Y_pred = linear_regressor.predict(X)
+    
+    #Plotting the prediction
+    plt.plot(data.index, Y, label="Actual Open Price")
+    plt.plot(data.index, Y_pred, label="Predicted Open Price", linestyle="--")
+    plt.xlabel("Date")
+    plt.ylabel("Open Price")
+    plt.legend()
+    plt.title(f"Linear Regression Prediction for {stock_symbol} (Open Prices)")
+
 # Function for the Stock Analysis
 def check(stock_symbol):
     if yf.Ticker(stock_symbol):
         yahoof(stock_symbol)
+        predictions(stock_symbol)
     else:
         st.write("Apologies, we could not the information you're requesting on Yahoo finance.")
 
