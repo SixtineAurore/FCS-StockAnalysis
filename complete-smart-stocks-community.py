@@ -174,23 +174,35 @@ def yahoof(stock_symbol):
         st.write("Apologies, we could not the information you're requesting on Yahoo finance.")
 
 #Machine Learning
+# Machine Learning Prediction Function
 def predictions(stock_symbol):
     yahoo_stock = yf.Ticker(stock_symbol)
-    period_options = ["1d", "5d", "1mo", "3mo", "6mo", "1y"]
-    data = yahoo_stock.history(period=str(st.selectbox("How many days:", period_options)))
-    X = data.index.map(pd.Timestamp.toordinal).values.reshape(-1, 1)
-    X = X.reshape(-1, 1)
+    period_options = ["1mo", "3mo", "6mo", "1y"]
+    selected_period = st.selectbox("Select period for analysis:", period_options)
+    data = yahoo_stock.history(period=selected_period)
+    if data.empty:
+        st.write("No data available for the selected period.")
+        return
+    data['DateOrdinal'] = data.index.map(pd.Timestamp.toordinal)
+    X = data['DateOrdinal'].values.reshape(-1, 1)
+    Y = data['Close'].values.reshape(-1, 1)
     linear_regressor = LinearRegression()
     linear_regressor.fit(X, Y)
     Y_pred = linear_regressor.predict(X)
-    
-    #Plotting the prediction
-    plt.plot(data.index, Y, label="Actual Open Price")
-    plt.plot(data.index, Y_pred, label="Predicted Open Price", linestyle="--")
+    future_days = 30
+    future_dates = pd.date_range(data.index[-1], periods=future_days + 1, freq='B')[1:]
+    future_ordinals = future_dates.map(pd.Timestamp.toordinal).values.reshape(-1, 1)
+    future_pred = linear_regressor.predict(future_ordinals)
+
+    plt.figure(figsize=(12, 6))
+    plt.plot(data.index, Y, label="Actual Close Price", color="blue")
+    plt.plot(data.index, Y_pred, label="Fitted Trend", linestyle="--", color="green")
+    plt.plot(future_dates, future_pred, label="Future Predictions", linestyle="--", color="red")
     plt.xlabel("Date")
-    plt.ylabel("Open Price")
+    plt.ylabel("Close Price")
     plt.legend()
-    plt.title(f"Linear Regression Prediction for {stock_symbol} (Open Prices)")
+    plt.title(f"Stock Price Prediction for {stock_symbol} - {selected_period}")
+    st.pyplot(plt)
 
 # Function for the Stock Analysis
 def check(stock_symbol):
