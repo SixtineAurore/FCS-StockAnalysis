@@ -85,21 +85,6 @@ conn.commit()
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
-# First part pie Chart Industries 
-import streamlit as st
-import sqlite3
-import pandas as pd
-import matplotlib.pyplot as plt
-
-# Set up database connection
-conn = sqlite3.connect('your_database.db')
-cursor = conn.cursor()
-
-# Hashing function for passwords (replace with your hash function)
-def hash_password(password):
-    return password  # Replace with actual hashing mechanism
-# End first part pie chart industires 
-
 # Registration function
 def register():
     username = st.text_input("Please enter a username*:")
@@ -130,7 +115,7 @@ def register():
             conn.commit()
             st.write("Registration successful!")
 
-# Second Part Pie Chart industries 
+# Part Pie Chart industries 
 st.header("Industry Interest Distribution")
 
     # Query database for industry preferences
@@ -154,7 +139,7 @@ st.header("Industry Interest Distribution")
         st.pyplot(fig)
     else:
         st.write("No data available to display the chart.")
-# End Second Part Pie Chart Industries 
+# End Part Pie Chart Industries 
 
 
 # Login function
