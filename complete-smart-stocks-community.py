@@ -130,6 +130,33 @@ def register():
             conn.commit()
             st.write("Registration successful!")
 
+# Second Part Pie Chart industries 
+st.header("Industry Interest Distribution")
+
+    # Query database for industry preferences
+    cursor.execute("SELECT favorite_industries FROM users")
+    industries_data = cursor.fetchall()
+    industries_list = [item[0] for item in industries_data]
+
+    if industries_list:
+        # Convert data to DataFrame
+        df = pd.DataFrame(industries_list, columns=['Industry'])
+        
+        # Calculate the distribution of industries
+        industry_counts = df['Industry'].value_counts()
+
+        # Plot the pie chart
+        fig, ax = plt.subplots(facecolor='none')
+        ax.pie(industry_counts, labels=industry_counts.index, autopct='%1.1f%%', startangle=90)
+        ax.set_facecolor('none')
+        ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+        st.pyplot(fig)
+    else:
+        st.write("No data available to display the chart.")
+# End Second Part Pie Chart Industries 
+
+
 # Login function
 def login():
     username = st.text_input("Username:")
