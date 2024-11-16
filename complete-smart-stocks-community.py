@@ -106,6 +106,7 @@ def register():
         reasons_membership = st.selectbox("Reason for joining:", reasons)
         linkedin_profile =st.text_input("Linkedin Profile Link (optional):") #new field for Linkedin Link
 
+        
         if st.button("Register"):
             hashed_password = hash_password(password)
             cursor.execute(
@@ -115,10 +116,11 @@ def register():
             conn.commit()
             st.write("Registration successful!")
 
-# Part Pie Chart industries 
-st.header("Industry Interest Distribution")
+# Second Part Pie Chart industries 
 
-    # Query database for industry preferences
+# Query database for industry preferences
+def pie_chart():
+    st.header("Industry Interest Distribution")
     cursor.execute("SELECT favorite_industries FROM users")
     industries_data = cursor.fetchall()
     industries_list = [item[0] for item in industries_data]
@@ -129,17 +131,18 @@ st.header("Industry Interest Distribution")
         
         # Calculate the distribution of industries
         industry_counts = df['Industry'].value_counts()
-
+    
         # Plot the pie chart
         fig, ax = plt.subplots(facecolor='none')
         ax.pie(industry_counts, labels=industry_counts.index, autopct='%1.1f%%', startangle=90)
         ax.set_facecolor('none')
         ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
+    
         st.pyplot(fig)
     else:
         st.write("No data available to display the chart.")
-# End Part Pie Chart Industries 
+
+# End Second Part Pie Chart Industries 
 
 
 # Login function
@@ -176,6 +179,9 @@ def view_profile(username):
         st.write(f"- Favorite Stock: {user[5]}")
         if user [6]: #If Linkedin link exists, display it
             st.write(f"-LinkedIn Profile: [Link]({user[6]})")
+    pie_chart()
+
+
 # Introduction function placeholder
 def intro():
     st.write("Welcome to Smart Stocks!")
