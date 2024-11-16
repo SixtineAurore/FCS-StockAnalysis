@@ -85,6 +85,21 @@ conn.commit()
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
+# First part pie Chart Industries 
+import streamlit as st
+import sqlite3
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Set up database connection
+conn = sqlite3.connect('your_database.db')
+cursor = conn.cursor()
+
+# Hashing function for passwords (replace with your hash function)
+def hash_password(password):
+    return password  # Replace with actual hashing mechanism
+# End first part pie chart industires 
+
 # Registration function
 def register():
     username = st.text_input("Please enter a username*:")
