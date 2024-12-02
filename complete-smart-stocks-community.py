@@ -12,7 +12,7 @@ st.set_page_config(
     page_title="Smart Stocks",   
 )
 
-#styling mit CSS (Armin)
+#styling with CSS (Armin)
 st.write(''' <style> /* eingebettetes CSS, daher <> und </> zum öffnen und schliessen von commands wie in html/css */
          /* company logo color ist 43,103,176 in RGB und #2b67b0 in hex */
          
@@ -39,6 +39,10 @@ st.write(''' <style> /* eingebettetes CSS, daher <> und </> zum öffnen und schl
         background-color: #89CFF0; 
         
     }
+
+    /* Chart styling */
+
+
     
          </style>''', unsafe_allow_html=True)  #muss man machen um automatisches "Übergehen" von html bzw css code zu umgehen
 
@@ -185,6 +189,9 @@ def view_profile(username):
 # Introduction function placeholder
 def intro():
     st.write("Welcome to Smart Stocks!")
+
+    #meiki/armin logo insertion, path needs to be in the same directory as the main code
+    st.image("LogoCS.png", width=700)
 
 # Function for the Yahoo Finance analysis
 def yahoof(stock_symbol):
