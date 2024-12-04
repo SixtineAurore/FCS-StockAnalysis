@@ -308,10 +308,11 @@ def community_page(username):
                 st.write(f"Risk Preference: {user[1]}")
                 st.write(f"Favorite Industry: {user[2]}")
                 st.write(f"Favorite Stock: {user[3]}")
-                #display linkedin link if available
+                
+                # Display LinkedIn link if available
                 if user[4]:  # Assuming the LinkedIn link is the 5th column in the query
                     st.write(f"LinkedIn Profile: [Link]({user[4]})")
-
+                
                 # Chat interface
                 if st.button(f"Chat with {user[0]}", key=f"chat_{user[0]}"):
                     st.session_state.chat_with = user[0]
@@ -323,9 +324,8 @@ def community_page(username):
         st.subheader(f"Chat with {st.session_state.chat_with}")
         
         # Display chat history
-        chat_history = get_chat_history(username, st.session_state.chat_with)
-        for msg in chat_history:
-            sender, message, timestamp = msg
+        chat_history = get_chat_history(username, st.session_state.chat_with) or []
+        for sender, message, timestamp in chat_history:
             if sender == username:
                 st.write(f"You ({timestamp}): {message}")
             else:
@@ -336,12 +336,14 @@ def community_page(username):
         if st.button("Send"):
             if new_message.strip():
                 save_message(username, st.session_state.chat_with, new_message)
-                st.experimental_rerun() #could be removed
-	elif "chat_with" not in st.session_state:
-	        st.session_state.chat_with = None
-    
+            
+    # Initialize session state if not set
+    if "chat_with" not in st.session_state:
+        st.session_state.chat_with = None
+
     if "message_input" not in st.session_state:
-		st.session_state.message_input = ""
+        st.session_state.message_input = ""
+
 
 # Main function for logged-in user
 def main_after_login(username):
