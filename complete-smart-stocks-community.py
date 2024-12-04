@@ -337,6 +337,11 @@ def community_page(username):
             if new_message.strip():
                 save_message(username, st.session_state.chat_with, new_message)
                 st.experimental_rerun() #could be removed
+	elif "chat_with" not in st.session_state:
+	        st.session_state.chat_with = None
+    
+    if "message_input" not in st.session_state:
+		st.session_state.message_input = ""
 
 # Main function for logged-in user
 def main_after_login(username):
