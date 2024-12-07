@@ -407,7 +407,6 @@ def main_after_login(username):
     choice = st.sidebar.selectbox("Menu", menu2)
 
     if choice == "Home":
-        st.write("Welcome to the Home Page!")
         st.image("LogoCS.png", width=700)
     elif choice == "Profile":
         view_profile(username)
