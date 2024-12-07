@@ -68,6 +68,9 @@ def intro():
     st.image("LogoCS.png", width=700)
 
 
+def Home():
+    return None
+
 ##### Password Hashing #####
 
 def hash_password(password):
@@ -122,7 +125,7 @@ def register():
                 (username, hashed_password, risk_preference, favorite_industries, reasons_membership, favorite_stock, linkedin_profile)
             )
             conn.commit()
-            st.write("Registration successful!")
+            st.write("You've successfully registered. To access your profile, the stock analysis tool, and the community, please go to the Log In page.")
 
 ##### Log In #####
 
@@ -139,12 +142,13 @@ def login():
         if password:
             hashed_password = hash_password(password)
             if user[1] == hashed_password:
-                st.write("Login successful!")
+                st.write("You've successfully logged in! You can now access the profile, stock analysis and community through the new menu on the left of your screen. We wish you a pleasant time investing and getting to know other investors.")
                 st.session_state["logged_in"] = True
                 st.session_state["username"] = username
+                st.session_state["current_page"] = Home
                 return username
             else:
-                st.write("Incorrect password")
+                st.write("Incorrect password.")
                 return None
 
 
@@ -402,21 +406,23 @@ def main_initial():
 ############### Post-login Menu ###############
 
 def main_after_login(username):
-    st.title("Smart Stocks")
     menu2 = ["Home", "Profile", "Stock Analysis", "Community", "Exit"]
     choice = st.sidebar.selectbox("Menu", menu2)
 
-    if choice == "Home":
-        st.image("LogoCS.png", width=700)
+    if choice == "Home":      
+        Home()
     elif choice == "Profile":
+        st.title("Smart Stocks")  
         view_profile(username)
     elif choice == "Stock Analysis":
+        st.title("Smart Stocks")  
         stock_analysis()
     elif choice == "Community":
+        st.title("Smart Stocks")  
         community_page(username)
     else:
         st.session_state["logged_in"] = False
-        st.write("Goodbye!")
+        st.write("You've logged out successfully. Come back anytime to explore the world of smart investments!")
 
 
 ######### Session state management to ensure logged in users see the logged in menu, and those that are not logged in do not see it. ######## 
