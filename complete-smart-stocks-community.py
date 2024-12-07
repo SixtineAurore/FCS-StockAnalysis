@@ -43,9 +43,9 @@ CREATE TABLE IF NOT EXISTS users (
 )
 ''')
 
-##########Styling with CSS###########
-st.write(''' <style> /* eingebettetes CSS, daher <> und </> zum öffnen und schliessen von commands wie in html/css */
-         /* company logo color ist 43,103,176 in RGB und #2b67b0 in hex */
+########## Styling with CSS ###########
+st.write(''' <style> /* embedded CSS, therefore <> and </> in order to open and close commands according to html/css */
+         /* company logo color is 43,103,176 in RGB and #2b67b0 in hex */
          
     
         input[type="password"], input[type="text"] {
@@ -75,7 +75,7 @@ st.write(''' <style> /* eingebettetes CSS, daher <> und </> zum öffnen und schl
 
 
     
-         </style>''', unsafe_allow_html=True)  #muss man machen um automatisches "Übergehen" von html bzw css code zu umgehen
+         </style>''', unsafe_allow_html=True)  #in order to avoid automatic "escaping" or sanitization of html or css code#
 
 
 '''
