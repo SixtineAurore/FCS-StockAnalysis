@@ -24,11 +24,6 @@ import sqlite3                                    # Open Source Data Base manage
 import hashlib                                    # Open Source Python library to integrate hashes 
 from sklearn.linear_model import LinearRegression # Module to integrate linear regression model 
 
-#title
-st.set_page_config(
-    page_title="Smart Stocks",   
-)
-
 # Users database setup
 conn = sqlite3.connect('users.db')
 cursor = conn.cursor()
