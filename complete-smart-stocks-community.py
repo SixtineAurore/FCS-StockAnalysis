@@ -1,25 +1,28 @@
-##########Set Up###########
+'''Instructions for how to understand and read the following code:
+The following code is divided into five parts: 
+1. Set up
+2. Welcome Page, Registration, and Log In
+3. Logged-In User Interface
+3.1 Profile Page
+3.2 Data Analysis Page
+3.3 Community Page
+4. 
+(5. Bibliography)
 
-###For this code to run correctly, the following need to be installed: ###
+For this code to run correctly, the following needs to be installed: streamlit, numpy, pandas, yfinance, matplotlib, scikit-learn'''
+
+######################################## Set Up #########################################
 
 ##### Imports #####
 
-import streamlit as st 
-# Open Source Python library to work on the code all together #
-import numpy as np 
-# Open Source Python library to integrate mathematical functions #
-import pandas as pd 
-# Open Source Python library to integrate data analysis # 
-import yfinance as yf 
-# API #
-import matplotlib.pyplot as plt 
-# Open Source Python library to integrate statics and animation #
-import sqlite3 
-# Open Source Data Base management to store and manage data #
-import hashlib 
-# Open Source Python library to integrate hashes #
-from sklearn.linear_model import LinearRegression 
-# Module to integrate linear regression model # 
+import streamlit as st                            # Open Source Python library to work on the code all together 
+import numpy as np                                # Open Source Python library to integrate mathematical functions 
+import pandas as pd                               # Open Source Python library to integrate data analysis 
+import yfinance as yf                             # API 
+import matplotlib.pyplot as plt                   # Open Source Python library to integrate statics and animation 
+import sqlite3                                    # Open Source Data Base management to store and manage data 
+import hashlib                                    # Open Source Python library to integrate hashes 
+from sklearn.linear_model import LinearRegression # Module to integrate linear regression model 
 
 #title
 st.set_page_config(
@@ -78,16 +81,7 @@ st.write(''' <style> /* embedded CSS, therefore <> and </> in order to open and 
          </style>''', unsafe_allow_html=True)  #in order to avoid automatic "escaping" or sanitization of html or css code#
 
 
-'''
-# Check if the linkedin_profile column exists, and add it if it doesn't
-cursor.execute("PRAGMA table_info(users)")
-columns = [col[1] for col in cursor.fetchall()]
-
-if 'linkedin_profile' not in columns:
-    cursor.execute("ALTER TABLE users ADD COLUMN linkedin_profile TEXT")
-    conn.commit()'''
-
-##########Welcome Page & Registration###########
+######################################## Welcome Page, Registration, and Log In#########################################
 # Introduction function placeholder
 def intro():
     st.write("Welcome to Smart Stocks!")
@@ -130,7 +124,7 @@ def register():
             conn.commit()
             st.write("Registration successful!")
 
-##########Log In###########
+######################################## Log In #########################################
 # Login function
 def login():
     username = st.text_input("Username:")
@@ -259,7 +253,7 @@ def stock_analysis():
     if stock_symbol:
         check(stock_symbol)
 
-##########Community###########
+######################################## Community #########################################
 
 # Creation of a separate database for messages from chats between users
 cursor.execute('''
@@ -392,6 +386,7 @@ def main_after_login(username):
     elif choice == "Community":
         community_page(username)
     else:
+        st.session_state["logged_in"] = False
         st.write("Goodbye!")
 
 #Session state management to ensure logged in users see the logged in menu, and those that are not logged in do not see it.
