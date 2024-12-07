@@ -24,24 +24,7 @@ import sqlite3                                    # Open Source Data Base manage
 import hashlib                                    # Open Source Python library to integrate hashes 
 from sklearn.linear_model import LinearRegression # Module to integrate linear regression model 
 
-# Users database setup
-conn = sqlite3.connect('users.db')
-cursor = conn.cursor()
-
-# Creation of the table in the database if it doesn't exist yet
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS users (
-    username TEXT PRIMARY KEY,
-    password TEXT NOT NULL,
-    risk_preference TEXT,
-    favorite_industries TEXT,
-    reasons_membership TEXT,
-    favorite_stock TEXT,
-    linkedin_profile TEXT
-)
-''')
-
-########## Styling with CSS ###########
+##### CSS Styling #####
 st.write(''' <style> /* embedded CSS, therefore <> and </> in order to open and close commands according to html/css */
          /* company logo color is 43,103,176 in RGB and #2b67b0 in hex */
          
@@ -79,16 +62,36 @@ st.write(''' <style> /* embedded CSS, therefore <> and </> in order to open and 
 ######################################## Welcome Page, Registration, and Log In#########################################
 # Introduction function placeholder
 def intro():
-    st.write("Welcome to Smart Stocks!")
-
-    #meiki/armin logo insertion, path needs to be in the same directory as the main code
+    st.write("Invest Effortlessly using our Data Analysis tool.")
     st.image("LogoCS.png", width=700)
 
-# Password hashing function for security
+##### Password Hashing #####
+
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
-# Registration function
+
+##### User Database Setup #####
+
+# Users database setup
+conn = sqlite3.connect('users.db')
+cursor = conn.cursor()
+
+# Creation of the table in the database if it doesn't exist yet
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS users (
+    username TEXT PRIMARY KEY,
+    password TEXT NOT NULL,
+    risk_preference TEXT,
+    favorite_industries TEXT,
+    reasons_membership TEXT,
+    favorite_stock TEXT,
+    linkedin_profile TEXT
+)
+''')
+
+##### Registration #####
+
 def register():
     username = st.text_input("Please enter a username*:")
     if username:
@@ -104,11 +107,10 @@ def register():
         industries = ["Technology", "Healthcare", "Financials", "Energy", "Consumer Goods", "Utilities"]
         favorite_industries = st.selectbox("Favorite industry:", industries)
         
-        favorite_stock = st.text_input("Favorite stock symbol:")
+        favorite_stock = st.text_input("Favorite stock symbol (optional):")
         reasons = ["Access to stock analysis", "Network with investors", "Curiosity"]
         reasons_membership = st.selectbox("Reason for joining:", reasons)
-        linkedin_profile =st.text_input("Linkedin Profile Link (optional):") #new field for Linkedin Link
-
+        linkedin_profile =st.text_input("Linkedin Profile Link (optional):") 
         
         if st.button("Register"):
             hashed_password = hash_password(password)
@@ -119,8 +121,8 @@ def register():
             conn.commit()
             st.write("Registration successful!")
 
-######################################## Log In #########################################
-# Login function
+##### Log In #####
+
 def login():
     username = st.text_input("Username:")
     if username:
@@ -142,7 +144,9 @@ def login():
                 st.write("Incorrect password")
                 return None
 
-# Second Part Pie Chart Industries for the Profile
+######################################## Logged In User Interface #########################################
+
+##### Profile #####
 
 # Query database for industry preferences
 def pie_chart():
@@ -353,7 +357,7 @@ def community_page(username):
 
 # Main menu for initial app navigation (pre-login)
 def main_initial():
-    st.title("User Registration and Login System")
+    st.title("Welcome to Smart Stocks!")
     menu = ["Who we are", "Register", "Login"]
     choice = st.sidebar.selectbox("Menu", menu)
 
@@ -374,6 +378,7 @@ def main_after_login(username):
 
     if choice == "Home":
         st.write("Welcome to the Home Page!")
+        st.image("LogoCS.png", width=700)
     elif choice == "Profile":
         view_profile(username)
     elif choice == "Stock Analysis":
@@ -393,3 +398,4 @@ if __name__ == "__main__":
         main_after_login(st.session_state["username"])
     else:
         main_initial()
+
