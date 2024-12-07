@@ -1,12 +1,12 @@
 '''Instructions for how to understand and read the following code:
 The following code is divided into five parts: 
-1. Set up
+1. Set up 
 2. Welcome Page, Registration, and Log In
 3. Logged-In User Interface
 3.1 Profile Page
 3.2 Data Analysis Page
 3.3 Community Page
-4. 
+4. Menu and Page Navigations
 (5. Bibliography)
 
 For this code to run correctly, the following needs to be installed: streamlit, numpy, pandas, yfinance, matplotlib, scikit-learn'''
@@ -60,10 +60,13 @@ st.write(''' <style> /* embedded CSS, therefore <> and </> in order to open and 
 
 
 ######################################## Welcome Page, Registration, and Log In#########################################
-# Introduction function placeholder
+
+##### Homepage #####
+
 def intro():
     st.write("Invest effortlessly using our data analysis tool.")
     st.image("LogoCS.png", width=700)
+
 
 ##### Password Hashing #####
 
@@ -144,6 +147,7 @@ def login():
                 st.write("Incorrect password")
                 return None
 
+
 ######################################## Logged In User Interface #########################################
 
 ############### Profile Page ###############
@@ -151,7 +155,7 @@ def login():
 ##### User Industry Preferences Overview Pie Chart #####
 
 def pie_chart():
-    st.header("Industry Interest Distribution")
+    st.subheader("Industry Interest Distribution")
     cursor.execute("SELECT favorite_industries FROM users")
     industries_data = cursor.fetchall()
     industries_list = [item[0] for item in industries_data] # Retrieve the industries from the database created before
@@ -173,21 +177,29 @@ def pie_chart():
     else:
         st.write("Unfortunately, there isn't enough data available to display the chart for now. Once more users sign up to Smart Stocks, we will be able to create the chart.")
 
-# Profile display function
+
+##### User's Profile Information View #####
+
 def view_profile(username):
     cursor.execute("SELECT * FROM users WHERE username=?", (username,))
     user = cursor.fetchone()
     if user:
-        st.write(f"**Profile for {username}:**")
+        st.subheader(f"{username}'s Profile:")
         st.write(f"- Favorite Industry: {user[3]}")
         st.write(f"- Risk Preference: {user[2]}")
         st.write(f"- Membership Reason: {user[4]}")
         st.write(f"- Favorite Stock: {user[5]}")
         if user [6]: #If Linkedin link exists, display it
-            st.write(f"- LinkedIn Profile: [Link]({user[6]})")
+            st.write(f"- LinkedIn: [Link]({user[6]})")
     pie_chart()
 
-# Yahoo Finance data analysis
+
+
+############### Stock Analysis ###############
+
+
+##### Yahoo Finance Data Retrieval and Analysis #####
+
 def yahoof(stock_symbol):
     try: 
         yahoo_stock = yf.Ticker(stock_symbol)
@@ -205,17 +217,18 @@ def yahoof(stock_symbol):
             st.write("P/E ratio is not available.")
         st.line_chart(stock_data['Close'])
     except:
-        st.write("Apologies, we could not the information you're requesting on Yahoo finance.")
+        st.write("Unfortunately, we could not find the information you're requesting on Yahoo Finance. Please enter another valid stock symbol.")
 
-# Machine Learning Using a Linear Regression Model
-# Machine Learning Prediction Function
+
+##### Stock price prediction model using a linear regression model (Machine Learning) #####
+
 def predictions(stock_symbol):
     yahoo_stock = yf.Ticker(stock_symbol)
     period_options = ["1mo", "3mo", "6mo", "1y"]
     selected_period = st.selectbox("Select period for analysis:", period_options)
     data = yahoo_stock.history(period=selected_period)
     if data.empty:
-        st.write("No data available for the selected period.")
+        st.write("There is no data available for the selected period.")
         return
     data['DateOrdinal'] = data.index.map(pd.Timestamp.toordinal)
     X = data['DateOrdinal'].values.reshape(-1, 1)
@@ -238,22 +251,28 @@ def predictions(stock_symbol):
     plt.title(f"Stock Price Prediction for {stock_symbol} - {selected_period}")
     st.pyplot(plt)
 
-# Error handling for stocks unavailable in the database
+
+##### Error handling for stocks unavailable in the database #####
+
 def check(stock_symbol):
     if yf.Ticker(stock_symbol):
         yahoof(stock_symbol)
         predictions(stock_symbol)
     else:
-        st.write("Apologies, we could not the information you're requesting on Yahoo finance.")
+        st.write("Unfortunately, we could not find the information you're requesting on Yahoo Finance. Please enter another valid stock symbol.")
 
-# Stock Analysis Page
+
+##### Stock Analysis Page #####
+
 def stock_analysis():
-    st.write("Stock Analysis Tool")
-    stock_symbol = st.text_input("Enter stock symbol:")
+    st.subheader("Stock Analysis Tool")
+    stock_symbol = st.text_input("Enter a valid stock symbol:")
     if stock_symbol:
         check(stock_symbol)
 
-######################################## Community #########################################
+############### Community ###############
+
+##### Set up for the chat interface #####
 
 # Creation of a separate database for messages from chats between users
 cursor.execute('''
@@ -268,25 +287,6 @@ CREATE TABLE IF NOT EXISTS messages (
 )
 ''')
 conn.commit()
-
-
-# Function that shows a user the profiles of similar users
-def find_similar_users(username):
-    """Find users with similar interests and risk preferences"""
-    cursor.execute("SELECT * FROM users WHERE username=?", (username,))
-    current_user = cursor.fetchone()
-    
-    if current_user:
-        cursor.execute("""
-            SELECT username, risk_preference, favorite_industries, favorite_stock, linkedin_profile 
-            FROM users 
-            WHERE username != ? 
-            AND (risk_preference = ? OR favorite_industries = ? OR favorite_stock = ?)
-        """, (username, current_user[2], current_user[3], current_user[5]))
-        
-        similar_users = cursor.fetchall()
-        return similar_users
-    return []
 
 # Function that saves messages exchanged between users in the database
 def save_message(sender, receiver, message):
@@ -306,7 +306,28 @@ def get_chat_history(user1, user2):
     """, (user1, user2, user2, user1))
     return cursor.fetchall()
 
-# Function 
+
+##### Finding similar users to display and chat with #####
+
+def find_similar_users(username):
+    """Find users with similar interests and risk preferences"""
+    cursor.execute("SELECT * FROM users WHERE username=?", (username,))
+    current_user = cursor.fetchone()
+    
+    if current_user:
+        cursor.execute("""
+            SELECT username, risk_preference, favorite_industries, favorite_stock, linkedin_profile 
+            FROM users 
+            WHERE username != ? 
+            AND (risk_preference = ? OR favorite_industries = ? OR favorite_stock = ?)
+        """, (username, current_user[2], current_user[3], current_user[5]))
+        
+        similar_users = cursor.fetchall()
+        return similar_users
+    return []
+
+##### Community Page (including chat interface) #####
+
 def community_page(username):
     st.header("Community")
     
@@ -331,11 +352,11 @@ def community_page(username):
     else:
         st.write("No similar users found yet.")
 
-    # Chat interface
+    ## Chat interface  ##
     if "chat_with" in st.session_state:
         st.subheader(f"Chat with {st.session_state.chat_with}")
         
-        # Display chat history
+        ## Display chat history  ##
         chat_history = get_chat_history(username, st.session_state.chat_with) or []
         for sender, message, timestamp in chat_history:
             if sender == username:
@@ -343,20 +364,26 @@ def community_page(username):
             else:
                 st.write(f"{sender} ({timestamp}): {message}")
         
-        # Message input
+        ## Message input  ##
         new_message = st.text_input("Type your message:", key="message_input")
         if st.button("Send"):
             if new_message.strip():
                 save_message(username, st.session_state.chat_with, new_message)
             
-    # Initialize session state if not set
+    ## Initialization of the "chat_with" and "messsage_input" inputs to ensure they are not empty. Otherwise, there is a risk of a KeyError.  ##
     if "chat_with" not in st.session_state:
         st.session_state.chat_with = None
 
     if "message_input" not in st.session_state:
         st.session_state.message_input = ""
 
-# Main menu for initial app navigation (pre-login)
+
+
+######################################## Menu and Page Navigations #########################################
+
+
+############### Pre-login Menu ###############
+
 def main_initial():
     st.title("Welcome to Smart Stocks!")
     menu = ["Who we are", "Register", "Login"]
@@ -371,9 +398,11 @@ def main_initial():
     elif choice == "Who we are":
         intro()
 
-# Main menu for logged-in users
+
+############### Post-login Menu ###############
+
 def main_after_login(username):
-    st.title("Smart Stocks - User Portal")
+    st.title("Smart Stocks")
     menu2 = ["Home", "Profile", "Stock Analysis", "Community", "Exit"]
     choice = st.sidebar.selectbox("Menu", menu2)
 
@@ -390,7 +419,9 @@ def main_after_login(username):
         st.session_state["logged_in"] = False
         st.write("Goodbye!")
 
-#Session state management to ensure logged in users see the logged in menu, and those that are not logged in do not see it.
+
+######### Session state management to ensure logged in users see the logged in menu, and those that are not logged in do not see it. ######## 
+
 if __name__ == "__main__":
     if "logged_in" not in st.session_state:
         st.session_state["logged_in"] = False
