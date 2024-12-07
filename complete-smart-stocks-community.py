@@ -374,7 +374,7 @@ def community_page(username):
             if new_message.strip():
                 save_message(username, st.session_state.chat_with, new_message)
             
-    ## Initialization of the "chat_with" and "messsage_input" inputs to ensure they are not empty. Otherwise, there is a risk of a KeyError.  ##
+    ## Initialization of the "chat_with" and "message_input" inputs to ensure they are not empty. Otherwise, there is a risk of a KeyError.  ##
     if "chat_with" not in st.session_state:
         st.session_state.chat_with = None
 
@@ -425,7 +425,7 @@ def main_after_login(username):
         st.write("You've logged out successfully. Come back anytime to explore the world of smart investments!")
 
 
-######### Session state management to ensure logged in users see the logged in menu, and those that are not logged in do not see it. ######## 
+######### Session state management to ensure logged in users see the logged in menu, and those that are not logged in do not see it ######## 
 
 if __name__ == "__main__":
     if "logged_in" not in st.session_state:
