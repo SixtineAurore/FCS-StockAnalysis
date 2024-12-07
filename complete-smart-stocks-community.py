@@ -1,18 +1,37 @@
+##########Set Up###########
+###For this code to run correctly, the following need to be installed: ###
+
 import streamlit as st
 import numpy as np
 import pandas as pd
-import yfinance as yf
+import yfinance as yf #API
 import matplotlib.pyplot as plt
 import sqlite3
 import hashlib
 from sklearn.linear_model import LinearRegression
 
-#titel
+#title
 st.set_page_config(
     page_title="Smart Stocks",   
 )
 
-#styling with CSS (Armin)
+# Users database setup
+conn = sqlite3.connect('users.db')
+cursor = conn.cursor()
+
+# Creation of the table in the database if it doesn't exist yet
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS users (
+    username TEXT PRIMARY KEY,
+    password TEXT NOT NULL,
+    risk_preference TEXT,
+    favorite_industries TEXT,
+    reasons_membership TEXT,
+    favorite_stock TEXT,
+    linkedin_profile TEXT
+)
+''')
+##########Styling with CSS###########
 st.write(''' <style> /* eingebettetes CSS, daher <> und </> zum öffnen und schliessen von commands wie in html/css */
          /* company logo color ist 43,103,176 in RGB und #2b67b0 in hex */
          
@@ -46,44 +65,23 @@ st.write(''' <style> /* eingebettetes CSS, daher <> und </> zum öffnen und schl
     
          </style>''', unsafe_allow_html=True)  #muss man machen um automatisches "Übergehen" von html bzw css code zu umgehen
 
-# Database setup
-conn = sqlite3.connect('users.db')
-cursor = conn.cursor()
 
-# Create table if it doesn't exist
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS users (
-    username TEXT PRIMARY KEY,
-    password TEXT NOT NULL,
-    risk_preference TEXT,
-    favorite_industries TEXT,
-    reasons_membership TEXT,
-    favorite_stock TEXT,
-    linkedin_profile TEXT
-)
-''')
+'''
 # Check if the linkedin_profile column exists, and add it if it doesn't
 cursor.execute("PRAGMA table_info(users)")
 columns = [col[1] for col in cursor.fetchall()]
 
 if 'linkedin_profile' not in columns:
     cursor.execute("ALTER TABLE users ADD COLUMN linkedin_profile TEXT")
-    conn.commit()
+    conn.commit()'''
 
-# Create messages table for chat functionality
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS messages (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    sender TEXT NOT NULL,
-    receiver TEXT NOT NULL,
-    message TEXT NOT NULL,
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (sender) REFERENCES users (username),
-    FOREIGN KEY (receiver) REFERENCES users (username)
-)
-''')
+##########Welcome Page & Registration###########
+# Introduction function placeholder
+def intro():
+    st.write("Welcome to Smart Stocks!")
 
-conn.commit()
+    #meiki/armin logo insertion, path needs to be in the same directory as the main code
+    st.image("LogoCS.png", width=700)
 
 # Password hashing function for security
 def hash_password(password):
@@ -120,7 +118,30 @@ def register():
             conn.commit()
             st.write("Registration successful!")
 
-# Second Part Pie Chart industries 
+##########Log In###########
+# Login function
+def login():
+    username = st.text_input("Username:")
+    if username:
+        cursor.execute("SELECT * FROM users WHERE username=?", (username,))
+        user = cursor.fetchone()
+        if not user:
+            st.write("Username not found.")
+            return None
+        
+        password = st.text_input("Password:", type="password")
+        if password:
+            hashed_password = hash_password(password)
+            if user[1] == hashed_password:
+                st.write("Login successful!")
+                st.session_state["logged_in"] = True
+                st.session_state["username"] = username
+                return username
+            else:
+                st.write("Incorrect password")
+                return None
+
+# Second Part Pie Chart Industries for the Profile
 
 # Query database for industry preferences
 def pie_chart():
@@ -146,31 +167,6 @@ def pie_chart():
     else:
         st.write("No data available to display the chart.")
 
-# End Second Part Pie Chart Industries 
-
-
-# Login function
-def login():
-    username = st.text_input("Username:")
-    if username:
-        cursor.execute("SELECT * FROM users WHERE username=?", (username,))
-        user = cursor.fetchone()
-        if not user:
-            st.write("Username not found.")
-            return None
-        
-        password = st.text_input("Password:", type="password")
-        if password:
-            hashed_password = hash_password(password)
-            if user[1] == hashed_password:
-                st.write("Login successful!")
-                st.session_state["logged_in"] = True
-                st.session_state["username"] = username
-                return username
-            else:
-                st.write("Incorrect password")
-                return None
-
 # Profile display function
 def view_profile(username):
     cursor.execute("SELECT * FROM users WHERE username=?", (username,))
@@ -185,15 +181,7 @@ def view_profile(username):
             st.write(f"-LinkedIn Profile: [Link]({user[6]})")
     pie_chart()
 
-
-# Introduction function placeholder
-def intro():
-    st.write("Welcome to Smart Stocks!")
-
-    #meiki/armin logo insertion, path needs to be in the same directory as the main code
-    st.image("LogoCS.png", width=700)
-
-# Function for the Yahoo Finance analysis
+# Yahoo Finance data analysis
 def yahoof(stock_symbol):
     try: 
         yahoo_stock = yf.Ticker(stock_symbol)
@@ -213,7 +201,7 @@ def yahoof(stock_symbol):
     except:
         st.write("Apologies, we could not the information you're requesting on Yahoo finance.")
 
-#Machine Learning
+# Machine Learning Using a Linear Regression Model
 # Machine Learning Prediction Function
 def predictions(stock_symbol):
     yahoo_stock = yf.Ticker(stock_symbol)
@@ -244,7 +232,7 @@ def predictions(stock_symbol):
     plt.title(f"Stock Price Prediction for {stock_symbol} - {selected_period}")
     st.pyplot(plt)
 
-# Function for the Stock Analysis
+# Error handling for stocks unavailable in the database
 def check(stock_symbol):
     if yf.Ticker(stock_symbol):
         yahoof(stock_symbol)
@@ -252,14 +240,31 @@ def check(stock_symbol):
     else:
         st.write("Apologies, we could not the information you're requesting on Yahoo finance.")
 
-# Stock analysis function
+# Stock Analysis Page
 def stock_analysis():
     st.write("Stock Analysis Tool")
     stock_symbol = st.text_input("Enter stock symbol:")
     if stock_symbol:
         check(stock_symbol)
 
-# New Community Functions
+##########Community###########
+
+# Creation of a separate database for messages from chats between users
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sender TEXT NOT NULL,
+    receiver TEXT NOT NULL,
+    message TEXT NOT NULL,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender) REFERENCES users (username),
+    FOREIGN KEY (receiver) REFERENCES users (username)
+)
+''')
+
+conn.commit()
+
+# Function that shows a user the profiles of similar users
 def find_similar_users(username):
     """Find users with similar interests and risk preferences"""
     cursor.execute("SELECT * FROM users WHERE username=?", (username,))
@@ -277,16 +282,16 @@ def find_similar_users(username):
         return similar_users
     return []
 
+# Function that saves messages exchanged between users in the database
 def save_message(sender, receiver, message):
-    """Save a chat message to the database"""
     cursor.execute("""
         INSERT INTO messages (sender, receiver, message, timestamp)
         VALUES (?, ?, ?, datetime('now'))
     """, (sender, receiver, message))
     conn.commit() #saves changes to database permanently
 
+# Function that retrieves the chat history between two users
 def get_chat_history(user1, user2):
-    """Retrieve chat history between two users"""
     cursor.execute("""
         SELECT sender, message, timestamp 
         FROM messages 
@@ -295,6 +300,7 @@ def get_chat_history(user1, user2):
     """, (user1, user2, user2, user1))
     return cursor.fetchall()
 
+# Function 
 def community_page(username):
     st.header("Community")
     
@@ -310,7 +316,7 @@ def community_page(username):
                 st.write(f"Favorite Stock: {user[3]}")
                 
                 # Display LinkedIn link if available
-                if user[4]:  # Assuming the LinkedIn link is the 5th column in the query
+                if user[4]:  
                     st.write(f"LinkedIn Profile: [Link]({user[4]})")
                 
                 # Chat interface
@@ -344,26 +350,10 @@ def community_page(username):
     if "message_input" not in st.session_state:
         st.session_state.message_input = ""
 
-
-# Main function for logged-in user
-def main_after_login(username):
-    st.title("Smart Stocks - User Portal")
-    menu2 = ["Home", "Profile", "Stock Analysis", "Community"]
-    choice = st.sidebar.selectbox("Menu", menu2)
-
-    if choice == "Home":
-        st.write("Welcome to the Home Page!")
-    elif choice == "Profile":
-        view_profile(username)
-    elif choice == "Stock Analysis":
-        stock_analysis()
-    elif choice == "Community":
-        community_page(username)
-
-# Main function for initial app navigation (pre-login)
+# Main menu for initial app navigation (pre-login)
 def main_initial():
     st.title("User Registration and Login System")
-    menu = ["Who we are", "Register", "Login", "Exit"]
+    menu = ["Who we are", "Register", "Login"]
     choice = st.sidebar.selectbox("Menu", menu)
 
     if choice == "Register":
@@ -374,9 +364,25 @@ def main_initial():
             main_after_login(username)
     elif choice == "Who we are":
         intro()
+
+# Main menu for logged-in user
+def main_after_login(username):
+    st.title("Smart Stocks - User Portal")
+    menu2 = ["Home", "Profile", "Stock Analysis", "Community", "Exit"]
+    choice = st.sidebar.selectbox("Menu", menu2)
+
+    if choice == "Home":
+        st.write("Welcome to the Home Page!")
+    elif choice == "Profile":
+        view_profile(username)
+    elif choice == "Stock Analysis":
+        stock_analysis()
+    elif choice == "Community":
+        community_page(username)
     else:
         st.write("Goodbye!")
 
+#Session state management to ensure logged in users see the logged in menu, and those that are not logged in do not see it.
 if __name__ == "__main__":
     if "logged_in" not in st.session_state:
         st.session_state["logged_in"] = False
