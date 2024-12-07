@@ -1,14 +1,25 @@
 ##########Set Up###########
+
 ###For this code to run correctly, the following need to be installed: ###
 
-import streamlit as st
-import numpy as np
-import pandas as pd
-import yfinance as yf #API
-import matplotlib.pyplot as plt
-import sqlite3
-import hashlib
-from sklearn.linear_model import LinearRegression
+##### Imports #####
+
+import streamlit as st 
+# Open Source Python library to work on the code all together #
+import numpy as np 
+# Open Source Python library to integrate mathematical functions #
+import pandas as pd 
+# Open Source Python library to integrate data analysis # 
+import yfinance as yf 
+# API #
+import matplotlib.pyplot as plt 
+# Open Source Python library to integrate statics and animation #
+import sqlite3 
+# Open Source Data Base management to store and manage data #
+import hashlib 
+# Open Source Python library to integrate hashes #
+from sklearn.linear_model import LinearRegression 
+# Module to integrate linear regression model # 
 
 #title
 st.set_page_config(
