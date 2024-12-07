@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS users (
     linkedin_profile TEXT
 )
 ''')
+
 ##########Styling with CSS###########
 st.write(''' <style> /* eingebettetes CSS, daher <> und </> zum öffnen und schliessen von commands wie in html/css */
          /* company logo color ist 43,103,176 in RGB und #2b67b0 in hex */
@@ -365,7 +366,7 @@ def main_initial():
     elif choice == "Who we are":
         intro()
 
-# Main menu for logged-in user
+# Main menu for logged-in users
 def main_after_login(username):
     st.title("Smart Stocks - User Portal")
     menu2 = ["Home", "Profile", "Stock Analysis", "Community", "Exit"]
