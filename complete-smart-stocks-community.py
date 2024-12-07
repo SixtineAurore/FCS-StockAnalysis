@@ -62,7 +62,7 @@ st.write(''' <style> /* embedded CSS, therefore <> and </> in order to open and 
 ######################################## Welcome Page, Registration, and Log In#########################################
 # Introduction function placeholder
 def intro():
-    st.write("Invest Effortlessly using our Data Analysis tool.")
+    st.write("Invest effortlessly using our data analysis tool.")
     st.image("LogoCS.png", width=700)
 
 ##### Password Hashing #####
@@ -146,14 +146,15 @@ def login():
 
 ######################################## Logged In User Interface #########################################
 
-##### Profile #####
+############### Profile Page ###############
 
-# Query database for industry preferences
+##### User Industry Preferences Overview Pie Chart #####
+
 def pie_chart():
     st.header("Industry Interest Distribution")
     cursor.execute("SELECT favorite_industries FROM users")
     industries_data = cursor.fetchall()
-    industries_list = [item[0] for item in industries_data]
+    industries_list = [item[0] for item in industries_data] # Retrieve the industries from the database created before
 
     if industries_list:
         # Convert data to DataFrame
@@ -167,10 +168,10 @@ def pie_chart():
         ax.pie(industry_counts, labels=industry_counts.index, autopct='%1.1f%%', startangle=90)
         ax.set_facecolor('none')
         ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-    
+ 
         st.pyplot(fig)
     else:
-        st.write("No data available to display the chart.")
+        st.write("Unfortunately, there isn't enough data available to display the chart for now. Once more users sign up to Smart Stocks, we will be able to create the chart.")
 
 # Profile display function
 def view_profile(username):
@@ -183,7 +184,7 @@ def view_profile(username):
         st.write(f"- Membership Reason: {user[4]}")
         st.write(f"- Favorite Stock: {user[5]}")
         if user [6]: #If Linkedin link exists, display it
-            st.write(f"-LinkedIn Profile: [Link]({user[6]})")
+            st.write(f"- LinkedIn Profile: [Link]({user[6]})")
     pie_chart()
 
 # Yahoo Finance data analysis
@@ -266,8 +267,8 @@ CREATE TABLE IF NOT EXISTS messages (
     FOREIGN KEY (receiver) REFERENCES users (username)
 )
 ''')
-
 conn.commit()
+
 
 # Function that shows a user the profiles of similar users
 def find_similar_users(username):
@@ -398,4 +399,3 @@ if __name__ == "__main__":
         main_after_login(st.session_state["username"])
     else:
         main_initial()
-
