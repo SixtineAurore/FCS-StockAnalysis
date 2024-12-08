@@ -9,7 +9,8 @@ The following code is divided into five parts:
 4. Menu and Page Navigations
 (5. Bibliography)
 
-For this code to run correctly, the following needs to be installed: streamlit, numpy, pandas, yfinance, matplotlib, scikit-learn'''
+For this code to run correctly, the following python modules need to be installed: streamlit, numpy, pandas, yfinance, matplotlib, scikit-learn. 
+Additionally, a logo was made. The code that refers to it will not work unless the file is located in the same directory and named in the same way as in the code.'''
 
 ######################################## Set Up #########################################
 
@@ -64,7 +65,7 @@ st.write(''' <style> /* embedded CSS, therefore <> and </> in order to open and 
 ##### Homepage #####
 
 def intro():
-    st.write("Invest effortlessly using our data analysis tool.")
+    st.write("Invest effortlessly using our data analysis tool powered by Yahoo Finance.")
     st.image("LogoCS.png", width=700)
 
 
