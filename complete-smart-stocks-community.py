@@ -27,6 +27,7 @@ import hashlib                                    # Open Source Python library t
 from sklearn.linear_model import LinearRegression # Module to integrate linear regression model 
 
 ##### Auto-generate requirements.txt #####
+# The code from line 31 to line 42 was created with the help of ChatGPT
 requirements = [
     "streamlit",
     "numpy",
