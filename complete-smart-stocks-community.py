@@ -9,8 +9,9 @@ The following code is divided into five parts:
 4. Menu and Page Navigations
 (5. Bibliography)
 
-For this code to run correctly, the following python modules need to be installed: streamlit, numpy, pandas, yfinance, matplotlib, scikit-learn. 
+The required Python modules are automatically listed in a file called `requirements.txt`. To install them, use the following command in your terminal: pip install -r requirements.txt  
 Additionally, a logo was made. The code that refers to it will not work unless the file is located in the same directory and named in the same way as in the code.'''
+
 
 ######################################## Set Up #########################################
 
@@ -24,6 +25,20 @@ import matplotlib.pyplot as plt                   # Open Source Python library t
 import sqlite3                                    # Open Source Data Base management to store and manage data 
 import hashlib                                    # Open Source Python library to integrate hashes 
 from sklearn.linear_model import LinearRegression # Module to integrate linear regression model 
+
+##### Auto-generate requirements.txt #####
+requirements = [
+    "streamlit",
+    "numpy",
+    "pandas",
+    "yfinance",
+    "matplotlib",
+    "scikit-learn"
+]
+
+# Create or update requirements.txt
+with open("requirements.txt", "w") as req_file:
+    req_file.write("\n".join(requirements))
 
 ##### CSS Styling #####
 st.write(''' <style> /* embedded CSS, therefore <> and </> in order to open and close commands according to html/css */
