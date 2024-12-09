@@ -41,7 +41,7 @@ requirements = [
 with open("requirements.txt", "w") as req_file:
     req_file.write("\n".join(requirements))
 
-##### CSS Styling #####
+##### CSS Styling ##### #ARMIN & MEIKI
 st.write(''' <style> /* embedded CSS, therefore <> and </> in order to open and close commands according to html/css */
          /* company logo color is 43,103,176 in RGB and #2b67b0 in hex */
          
@@ -82,13 +82,14 @@ st.write(''' <style> /* embedded CSS, therefore <> and </> in order to open and 
 
 def intro():
     st.write("Invest effortlessly using our data analysis tool powered by Yahoo Finance.")
-    st.image("LogoCS.png", width=700)
+    st.image("LogoCS 2.png", width=700)
 
 
 def Home():
     return None
 
-##### Password Hashing #####
+##### Password Hashing ##### 
+# Lines 94-95 were created with the help of ChatGPT
 
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
@@ -99,6 +100,8 @@ def hash_password(password):
 # Users database setup
 conn = sqlite3.connect('users.db')
 cursor = conn.cursor()
+
+# Lines 107-116 were debugged with the help of the following website: https://dbschema.com/2023/06/03/sqlite/create-table/#:~:text=To%20create%20a%20table%20in%20SQLite3%2C%20you%20use%20the%20__,one%20or%20more%20columns
 
 # Creation of the table in the database if it doesn't exist yet
 cursor.execute('''
@@ -114,6 +117,7 @@ CREATE TABLE IF NOT EXISTS users (
 ''')
 
 ##### Registration #####
+# Lines 120 to 147 were outlined and debugged with the help of ChatGPT
 
 def register():
     username = st.text_input("Please enter a username*:")
@@ -145,6 +149,7 @@ def register():
             st.write("You've successfully registered. To access your profile, the stock analysis tool, and the community, please go to the Log In page.")
 
 ##### Log In #####
+# Lines 154 to 174 were developed with the help from the following website: https://docs.streamlit.io/develop/api-reference/caching-and-state/st.session_state
 
 def login():
     username = st.text_input("Username:")
@@ -173,7 +178,7 @@ def login():
 
 ############### Profile Page ###############
 
-##### User Industry Preferences Overview Pie Chart #####
+##### User Industry Preferences Overview Pie Chart ##### #ARMIN & MEIKI
 
 def pie_chart():
     st.subheader("Industry Interest Distribution")
@@ -215,17 +220,17 @@ def view_profile(username):
     pie_chart()
 
 
-
 ############### Stock Analysis ###############
 
 
 ##### Yahoo Finance Data Retrieval and Analysis #####
+# Lines 229 to 246 were developed with help of the following website: https://dataheadhunters.com/academy/how-to-create-a-stock-market-analysis-tool-in-python-for-finance/ and https://github.com/ranaroussi/yfinance/blob/main/README.md
 
 def yahoof(stock_symbol):
     try: 
         yahoo_stock = yf.Ticker(stock_symbol)
         stock_data = yahoo_stock.history(period="1y")
-        current_price_yahoo = stock_data['Close'].iloc[-1] #retrieves the most recent stock price; more in INFO doc
+        current_price_yahoo = stock_data['Close'].iloc[-1] #retrieves the most recent stock price
         eps_yahoo = yahoo_stock.info.get('trailingEps') #retrieves the latest EPS data
 
         st.write(f"Current stock price of {stock_symbol}: ${current_price_yahoo:.2f}")
@@ -242,6 +247,7 @@ def yahoof(stock_symbol):
 
 
 ##### Stock price prediction model using a linear regression model (Machine Learning) #####
+# Lines 252 to 280 were debugged with the help of ChatGPT and developed with help of the following websites: ..., ..., ... #ARTHUR
 
 def predictions(stock_symbol):
     yahoo_stock = yf.Ticker(stock_symbol)
@@ -294,6 +300,7 @@ def stock_analysis():
 ############### Community ###############
 
 ##### Set up for the chat interface #####
+# Lines 305 and 318 were created after the first database, which was developed with the help of the following website: https://dbschema.com/2023/06/03/sqlite/create-table/#:~:text=To%20create%20a%20table%20in%20SQLite3%2C%20you%20use%20the%20__,one%20or%20more%20columns
 
 # Creation of a separate database for messages from chats between users
 cursor.execute('''
@@ -308,6 +315,8 @@ CREATE TABLE IF NOT EXISTS messages (
 )
 ''')
 conn.commit()
+
+# Lines 322 to 357 were debugged using Claude and developed with help from the following website: https://docs.streamlit.io/develop/tutorials/llms/build-conversational-apps
 
 # Function that saves messages exchanged between users in the database
 def save_message(sender, receiver, message):
@@ -348,6 +357,7 @@ def find_similar_users(username):
     return []
 
 ##### Community Page (including chat interface) #####
+# Lines 362 to 409 were debugged using ChatGPT and developed with help from the following website: https://docs.streamlit.io/develop/tutorials/llms/build-conversational-apps
 
 def community_page(username):
     st.header("Community")
@@ -401,7 +411,7 @@ def community_page(username):
 
 
 ######################################## Menu and Page Navigations #########################################
-
+# Lines 418 to 465 were developed with help from the following website: https://docs.streamlit.io/develop/api-reference/caching-and-state/st.session_state
 
 ############### Pre-login Menu ###############
 
