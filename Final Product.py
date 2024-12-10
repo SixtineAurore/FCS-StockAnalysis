@@ -247,7 +247,7 @@ def yahoof(stock_symbol):
 
 
 ##### Stock price prediction model using a linear regression model (Machine Learning) #####
-# Lines 252 to 280 were debugged with the help of ChatGPT and developed with help of the following websites: https://saturncloud.io/blog/linear-regression-with-pandas-dataframe/#:~:text=Performing%20linear%20regression%20with%20pandas,model%20using%20the%20sklearn%20library, https://www.geeksforgeeks.org/plotting-a-trend-graph-in-python/, https://medium.com/vortechsa/detecting-trends-in-time-series-data-using-python-2752be7d1172
+# Lines 252 to 280 were debugged with the help of ChatGPT and developed with help of the following websites: https://saturncloud.io/blog/linear-regression-with-pandas-dataframe/#:~:text=Performing%20linear%20regression%20with%20pandas, model%20using%20the%20sklearn%20library, https://www.geeksforgeeks.org/plotting-a-trend-graph-in-python/, https://medium.com/vortechsa/detecting-trends-in-time-series-data-using-python-2752be7d1172
 
 def predictions(stock_symbol):
     yahoo_stock = yf.Ticker(stock_symbol)
