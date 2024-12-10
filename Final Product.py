@@ -41,11 +41,12 @@ requirements = [
 with open("requirements.txt", "w") as req_file:
     req_file.write("\n".join(requirements))
 
-##### CSS Styling ##### #ARMIN & MEIKI
+##### CSS Styling #####
 st.write(''' <style> /* embedded CSS, therefore <> and </> in order to open and close commands according to html/css */
          /* company logo color is 43,103,176 in RGB and #2b67b0 in hex */
          
-    
+        /* Styling of the input boxes, however password box and all other boxes seperate, in order to ensure password hashing function */
+        
         input[type="password"], input[type="text"] {
         background-color: #b3d8ff;
         padding: 0px;
@@ -56,24 +57,24 @@ st.write(''' <style> /* embedded CSS, therefore <> and </> in order to open and 
         width: 100%;
         box-sizing: border-box;
     }
-
+        /* styling of all strings and change of font to Verdana */
+        
         body, h1, h2, h3, h4, h5, h6, p, div, label, span {
         font-family: 'Verdana', sans-serif;
         color: #2b67b0;
         
     }
 
-    /* Hintergrundfarbe */
+    /* Styling of backround colour */
+    
     [data-testid="stAppViewContainer"] {
         background-color: #89CFF0; 
         
     }
 
     /* Chart styling */
-
-
     
-         </style>''', unsafe_allow_html=True)  #in order to avoid automatic "escaping" or sanitization of html or css code#
+         </style>''', unsafe_allow_html=True)  #in order to avoid automatic "escaping" or sanitization of html or css code
 
 
 ######################################## Welcome Page, Registration, and Log In#########################################
@@ -178,26 +179,28 @@ def login():
 
 ############### Profile Page ###############
 
-##### User Industry Preferences Overview Pie Chart ##### #ARMIN & MEIKI
+##### User Industry Preferences Overview Pie Chart ##### 
+
+# Lines 184 - 195 were created with the help of ChatGPT
 
 def pie_chart():
     st.subheader("Industry Interest Distribution")
     cursor.execute("SELECT favorite_industries FROM users")
     industries_data = cursor.fetchall()
-    industries_list = [item[0] for item in industries_data] # Retrieve the industries from the database created before
+    industries_list = [item[0] for item in industries_data] # Get industry interests from the database created before
 
     if industries_list:
-        # Convert data to DataFrame
+        # Convert available data to DataFrame
         df = pd.DataFrame(industries_list, columns=['Industry'])
         
-        # Calculate the distribution of industries
+        # Calculate the distribution between the different industries our users submitted
         industry_counts = df['Industry'].value_counts()
     
-        # Plot the pie chart
-        fig, ax = plt.subplots(facecolor='none')
+        # Plot the pie chart 
+        fig, ax = plt.subplots(facecolor='none') # In order to remove withe box border from the chart 
         ax.pie(industry_counts, labels=industry_counts.index, autopct='%1.1f%%', startangle=90)
-        ax.set_facecolor('none')
-        ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+        ax.set_facecolor('none') 
+        ax.axis('equal')  # This line ensures that the pie chart is drawn as a circle
  
         st.pyplot(fig)
     else:
